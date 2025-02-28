@@ -1,4 +1,6 @@
-from typing import Any
+import sys
+
+from stats import get_num_words, get_letter_counts
 
 
 def main(book_path: str):
@@ -9,36 +11,8 @@ def main(book_path: str):
     print(f"{num_words} words found in the document")
     print()
     for letter_count in letter_counts:
-        print(f"The '{letter_count["char"]}' character was found {letter_count["count"]} times")
+        print(f"{letter_count['char']}: {letter_count['count']}")
     print("--- End report ---")
-
-
-def get_num_words(text) -> int:
-    words = text.split()
-    return len(words)
-
-
-def get_letter_counts(text: str) -> list[dict[str, Any]]:
-    text = text.lower()
-    char_counts = {}
-    for char in text:
-        if not char.isalpha():
-            continue
-        if char not in char_counts:
-            char_counts[char] = 0
-        char_counts[char] += 1
-
-    result = []
-    for char, count in char_counts.items():
-        result.append(
-            {
-                "char": char,
-                "count": count,
-            }
-        )
-
-    result.sort(reverse=True, key=lambda d: d["count"])
-    return result
 
 
 def get_book_text(path_to_file: str) -> str:
@@ -48,5 +22,8 @@ def get_book_text(path_to_file: str) -> str:
 
 
 if __name__ == "__main__":
-    book_path = "books/frankenstein.txt"
+    if len(sys.argv) != 2:
+        print("Usage: python3 main.py <path_to_book>")
+        sys.exit(1)
+    book_path = sys.argv[1]
     main(book_path)
